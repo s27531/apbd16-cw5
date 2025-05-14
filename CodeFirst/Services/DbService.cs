@@ -15,7 +15,7 @@ public class DbService : IDbService
     }
 
     public async Task<bool> AddPrescription(PrescriptionWithDetailsDTO prescription)
-    {
+    { // TODO: Check this method.
         var patient = await _context.Patients
             .SingleOrDefaultAsync(p => p.IdPatient == prescription.Patient.IdPatient);
 
