@@ -1,6 +1,6 @@
 namespace CodeFirst.Services;
 
-public class IDbService
+public interface IDbService
 {
     
 }

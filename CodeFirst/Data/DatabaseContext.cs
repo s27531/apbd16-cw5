@@ -36,8 +36,8 @@ public class DatabaseContext : DbContext
 
         modelBuilder.Entity<Prescription>().HasData(new List<Prescription>
         {
-            new() { IdPrescription = 1, Date = DateTime.Today, DueDate = DateTime.Now, IdPatient = 1, IdDoctor = 2 },
-            new() { IdPrescription = 2, Date = DateTime.Today, DueDate = DateTime.Now, IdPatient = 2, IdDoctor = 1 }
+            new() { IdPrescription = 1, Date = DateOnly.Parse("2025-05-14"), DueDate = DateOnly.Parse("2025-05-24"), IdPatient = 1, IdDoctor = 2 },
+            new() { IdPrescription = 2, Date = DateOnly.Parse("2025-05-07"), DueDate = DateOnly.Parse("2025-05-24"), IdPatient = 2, IdDoctor = 1 }
         });
 
         modelBuilder.Entity<Medicament>().HasData(new List<Medicament>
