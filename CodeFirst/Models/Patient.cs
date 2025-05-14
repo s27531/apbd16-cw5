@@ -12,7 +12,7 @@ public class Patient
     public string FirstName { get; set; }
     [MaxLength(100)]
     public string LastName { get; set; }
-    
+    [DataType(DataType.Date)]
     public DateOnly Birthdate { get; set; }
     
     public ICollection<Prescription> Prescriptions { get; set; }

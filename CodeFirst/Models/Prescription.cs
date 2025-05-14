@@ -8,9 +8,9 @@ public class Prescription
 {
     [Key]
     public int IdPrescription { get; set; }
-    
+    [DataType(DataType.Date)]
     public DateOnly Date { get; set; }
-    
+    [DataType(DataType.Date)]
     public DateOnly DueDate { get; set; }
     [ForeignKey(nameof(Patient))]
     public int IdPatient { get; set; }
