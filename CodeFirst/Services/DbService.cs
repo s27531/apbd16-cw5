@@ -29,7 +29,7 @@ public class DbService : IDbService
                     IdPrescription = pr.IdPrescription,
                     Date = pr.Date,
                     DueDate = pr.DueDate,
-                    Doctor = new DoctorDTO
+                    Doctor = new DoctorDto
                     {
                         IdDoctor = pr.Doctor.IdDoctor,
                         FirstName = pr.Doctor.FirstName,
