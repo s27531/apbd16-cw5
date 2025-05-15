@@ -14,8 +14,50 @@ public class DbService : IDbService
         _context = context;
     }
 
+    public async Task<PatientWithDetailsDTO> GetPatient(int patientId)
+    {
+        var patientWithDetails = await _context.Patients
+            .Where(p => p.IdPatient == patientId)
+            .Select(p => new PatientWithDetailsDTO
+            {
+                IdPatient = p.IdPatient,
+                FirstName = p.FirstName,
+                LastName = p.LastName,
+                Birthdate = p.Birthdate,
+                Prescriptions = p.Prescriptions.Select(pr => new PatientPrescriptionsDTO
+                {
+                    IdPrescription = pr.IdPrescription,
+                    Date = pr.Date,
+                    DueDate = pr.DueDate,
+                    Doctor = new DoctorDTO
+                    {
+                        IdDoctor = pr.Doctor.IdDoctor,
+                        FirstName = pr.Doctor.FirstName,
+                        LastName = pr.Doctor.LastName,
+                        Email = pr.Doctor.Email
+                    },
+                    Medicaments = pr.PrescriptionMedicaments.Select(pm => new MedicamentDTO
+                    {
+                        IdMedicament = pm.Medicament.IdMedicament,
+                        Name = pm.Medicament.Name,
+                        Description = pm.Medicament.Description,
+                        Details = pm.Details,
+                        Dose = pm.Dose
+                    }).ToList()
+                }).ToList()
+            })
+            .FirstOrDefaultAsync();
+
+        if (patientWithDetails == null)
+        {
+            throw new KeyNotFoundException($"Patient with Id {patientId} not found.");
+        }
+        
+        return patientWithDetails;
+    }
+    
     public async Task<bool> AddPrescription(PrescriptionWithDetailsDTO prescription)
-    { // TODO: Check this method.
+    {
         var patient = await _context.Patients
             .SingleOrDefaultAsync(p => p.IdPatient == prescription.Patient.IdPatient);
 
@@ -60,6 +102,7 @@ public class DbService : IDbService
             return false;
         }
 
+        // Create new prescription
         var createdPrescription = new Prescription
         {
             Date = prescription.Date,
@@ -70,9 +113,10 @@ public class DbService : IDbService
         _context.Prescriptions.Add(createdPrescription);
         await _context.SaveChangesAsync();
 
+        // Add medicaments for prescription
         var prescriptionMedicaments = prescription.Medicaments.Select(m => new PrescriptionMedicament
         {
-            IdPrescription = createdPrescription.IdPrescription, // TODO: Is it really updated?
+            IdPrescription = createdPrescription.IdPrescription,
             IdMedicament = m.IdMedicament,
             Dose = m.Dose,
             Details = m.Details
