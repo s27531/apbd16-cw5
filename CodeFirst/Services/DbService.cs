@@ -5,18 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CodeFirst.Services;
 
-public class DbService : IDbService
+public class DbService(DatabaseContext context) : IDbService
 {
-    private readonly DatabaseContext _context;
-
-    public DbService(DatabaseContext context)
-    {
-        _context = context;
-    }  
-    
     public async Task<PatientWithPrescriptionDto> GetPatient(int patientId)
     {
-        var patientWithDetails = await _context.Patients
+        var patientWithDetails = await context.Patients
             .Where(p => p.IdPatient == patientId)
             .Select(p => new PatientWithPrescriptionDto
             {
@@ -59,7 +52,7 @@ public class DbService : IDbService
     
     public async Task<bool> AddPrescription(PrescriptionWithDetailsDto prescription)
     {
-        var patient = await _context.Patients
+        var patient = await context.Patients
             .SingleOrDefaultAsync(p => p.IdPatient == prescription.Patient.IdPatient);
 
         // Add patient if not exist.
@@ -72,15 +65,16 @@ public class DbService : IDbService
                 LastName = prescription.Patient.LastName,
                 Birthdate = prescription.Patient.Birthdate
             };
-            _context.Patients.Add(patient);
-            await _context.SaveChangesAsync();
+            context.Patients.Add(patient);
         }
 
         // Validate medicaments existence
-        var isMedicamentsValid = prescription.Medicaments
-            .Where(m => !_context.Medicaments.Any(m1 => m1.IdMedicament == m.IdMedicament))
-            .ToList().Any();
-        if (isMedicamentsValid)
+        var medicamentIds = prescription.Medicaments.Select(m => m.IdMedicament).ToList();
+        var existingIds = await context.Medicaments
+            .Where(m => medicamentIds.Contains(m.IdMedicament))
+            .Select(m => m.IdMedicament)
+            .ToListAsync();
+        if (existingIds.Count != medicamentIds.Count)
         {
             return false;
         }
@@ -92,7 +86,7 @@ public class DbService : IDbService
         }
         
         // Validate doctor's existence
-        if (!_context.Doctors.Any(d => d.IdDoctor == prescription.Doctor.IdDoctor))
+        if (!await context.Doctors.AnyAsync(d => d.IdDoctor == prescription.Doctor.IdDoctor))
         {
             return false;
         }
@@ -111,8 +105,8 @@ public class DbService : IDbService
             IdPatient = prescription.Patient.IdPatient,
             IdDoctor = prescription.Doctor.IdDoctor
         };
-        _context.Prescriptions.Add(createdPrescription);
-        await _context.SaveChangesAsync();
+        context.Prescriptions.Add(createdPrescription);
+        await context.SaveChangesAsync(); // Attaching id for prescription
 
         // Add medicaments for prescription
         var prescriptionMedicaments = prescription.Medicaments.Select(m => new PrescriptionMedicament
@@ -123,8 +117,8 @@ public class DbService : IDbService
             Details = m.Details
         }).ToList();
         
-        _context.PrescriptionMedicaments.AddRange(prescriptionMedicaments);
-        await _context.SaveChangesAsync();
+        context.PrescriptionMedicaments.AddRange(prescriptionMedicaments);
+        await context.SaveChangesAsync();
 
         return true;
     }
