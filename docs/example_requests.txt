@@ -1,0 +1,153 @@
+# Good request data.
+{
+    "patient" : {
+        "idPatient" : 1,
+        "firstName" : "Wojciech",
+        "lastName" : "Nowak",
+        "birthdate" : "1995-05-12"
+    },
+    "doctor" : {
+        "idDoctor": 2,
+        "firstName": "Andrzej",
+        "lastName": "Nowak",
+        "email": "andrzej.nowak@nfz.gov.pl"
+    },
+    "medicaments" : [
+        {
+            "idMedicament": 2,
+            "name": "Medicament Dos",
+            "type" : "Type Dos",
+            "dose": 5,
+            "details": "Take doses after dinner twice.",
+            "description": "Very weak medicament"
+        },
+        {
+            "idMedicament": 1,
+            "name": "Medicament Uno",
+            "type" : "Type Uno",
+            "details": "Take doses after dinner twice.",
+            "description": "Very stronk medicament"
+        }
+    ],
+    "date" : "2025-05-12",
+    "dueDate" : "2025-06-24"
+}
+
+# Very bad request data.
+{
+    "patient": {
+        "idPatient": 999,
+        "firstName": "",
+        "lastName": null,
+        "birthdate": "not-a-date"
+    },
+    "doctor": {
+        "idDoctor": 12345,
+        "firstName": "123",
+        "lastName": "🤖",
+        "email": "not-an-email"
+    },
+    "medicaments": [
+        {
+            "idMedicament": 99,
+            "name": "Medicament Bogus",
+            "type": "",
+            "dose": -100,
+            "details": null,
+            "description": ""
+        },
+        {
+            "idMedicament": 1,
+            "name": "Medicament Uno",
+            "type": "Type Uno",
+            "details": "x",
+            "description": "Very stronk medicament"
+        },
+        {
+            "idMedicament": 2,
+            "name": "Overflow",
+            "type": "Overkill",
+            "dose": 1,
+            "details": "Extra",
+            "description": "Too many"
+        },
+        {
+            "idMedicament": 3,
+            "name": "Overflow2",
+            "type": "Overkill2",
+            "dose": 1,
+            "details": "Extra",
+            "description": "Too many"
+        }
+    ],
+    "date": "2025-08-01",
+    "dueDate": "2025-07-01"
+}
+
+# New person request
+{
+    "patient" : {
+        "firstName" : "Test",
+        "lastName" : "Usery",
+        "birthdate" : "1995-05-12"
+    },
+    "doctor" : {
+        "idDoctor": 2,
+        "firstName": "Andrzej",
+        "lastName": "Nowak",
+        "email": "andrzej.nowak@nfz.gov.pl"
+    },
+    "medicaments" : [
+        {
+            "idMedicament": 2,
+            "name": "Medicament Dos",
+            "type" : "Type Dos",
+            "dose": 5,
+            "details": "Take doses after dinner twice.",
+            "description": "Very weak medicament"
+        },
+        {
+            "idMedicament": 1,
+            "name": "Medicament Uno",
+            "type" : "Type Uno",
+            "details": "Take doses after dinner twice.",
+            "description": "Very stronk medicament"
+        }
+    ],
+    "date" : "2025-05-12",
+    "dueDate" : "2025-06-24"
+}
+
+# Date invalid request
+{
+    "patient" : {
+        "firstName" : "Test",
+        "lastName" : "Usery",
+        "birthdate" : "1995-05-12"
+    },
+    "doctor" : {
+        "idDoctor": 2,
+        "firstName": "Andrzej",
+        "lastName": "Nowak",
+        "email": "andrzej.nowak@nfz.gov.pl"
+    },
+    "medicaments" : [
+        {
+            "idMedicament": 2,
+            "name": "Medicament Dos",
+            "type" : "Type Dos",
+            "dose": 5,
+            "details": "Take doses after dinner twice.",
+            "description": "Very weak medicament"
+        },
+        {
+            "idMedicament": 1,
+            "name": "Medicament Uno",
+            "type" : "Type Uno",
+            "details": "Take doses after dinner twice.",
+            "description": "Very stronk medicament"
+        }
+    ],
+    "date" : "2025-07-12",
+    "dueDate" : "2025-06-24"
+}

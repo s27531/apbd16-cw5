@@ -75,12 +75,29 @@ public class DbService(DatabaseContext context) : IDbService
             return null;
         }
         
+        var patient = await context.Patients
+            .FirstOrDefaultAsync(p => p.FirstName == prescription.Patient.FirstName &&
+                                       p.LastName == prescription.Patient.LastName &&
+                                       p.Birthdate == prescription.Patient.Birthdate);
+        if (patient == null)
+        {
+            patient = new Patient
+            {
+                FirstName = prescription.Patient.FirstName,
+                LastName = prescription.Patient.LastName,
+                Birthdate = prescription.Patient.Birthdate
+            };
+
+            context.Patients.Add(patient);
+            await context.SaveChangesAsync();
+        }
+        
         // Create prescription
         var newPrescription = new Prescription
         {
             Date = prescription.Date,
             DueDate = prescription.DueDate,
-            IdPatient = prescription.Patient.IdPatient,
+            IdPatient = patient.IdPatient,
             IdDoctor = prescription.Doctor.IdDoctor
         };
         context.Prescriptions.Add(newPrescription);

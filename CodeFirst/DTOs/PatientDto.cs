@@ -5,7 +5,7 @@ namespace CodeFirst.DTOs;
  */
 public class PatientDto
 {
-    public required int IdPatient { get; init; }
+    public int IdPatient { get; init; }
     public required string FirstName { get; init; }
     public required string LastName { get; init; }
     public required DateOnly Birthdate { get; init; }
