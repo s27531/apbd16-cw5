@@ -75,6 +75,7 @@ public class DbService(DatabaseContext context) : IDbService
             return null;
         }
         
+        // Validate patient, and add it if not exists.
         var patient = await context.Patients
             .FirstOrDefaultAsync(p => p.FirstName == prescription.Patient.FirstName &&
                                        p.LastName == prescription.Patient.LastName &&
