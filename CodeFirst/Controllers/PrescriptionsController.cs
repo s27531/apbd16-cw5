@@ -14,8 +14,6 @@ public class PrescriptionsController : ControllerBase
     {
         _dbService = dbService;
     }
-
-    // TODO: Other endpoints for testing sake.
     
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] PrescriptionWithDetailsDTO prescription)
