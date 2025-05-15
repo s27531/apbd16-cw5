@@ -19,6 +19,5 @@ public class Prescription
     
     public Patient Patient { get; set; }
     public Doctor Doctor { get; set; }
-    
     public ICollection<PrescriptionMedicament> PrescriptionMedicaments { get; set; }
 }

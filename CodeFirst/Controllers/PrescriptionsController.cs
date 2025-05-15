@@ -16,7 +16,7 @@ public class PrescriptionsController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] PrescriptionWithDetailsDTO prescription)
+    public async Task<IActionResult> Add([FromBody] PrescriptionWithDetailsDto prescription)
     {
         var isAdded = await _dbService.AddPrescription(prescription);
         if (isAdded)

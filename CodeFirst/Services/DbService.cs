@@ -14,17 +14,17 @@ public class DbService : IDbService
         _context = context;
     }  
     
-    public async Task<PatientWithDetailsDTO> GetPatient(int patientId)
+    public async Task<PatientWithPrescriptionDto> GetPatient(int patientId)
     {
         var patientWithDetails = await _context.Patients
             .Where(p => p.IdPatient == patientId)
-            .Select(p => new PatientWithDetailsDTO
+            .Select(p => new PatientWithPrescriptionDto
             {
                 IdPatient = p.IdPatient,
                 FirstName = p.FirstName,
                 LastName = p.LastName,
                 Birthdate = p.Birthdate,
-                Prescriptions = p.Prescriptions.Select(pr => new PatientPrescriptionsDTO
+                Prescriptions = p.Prescriptions.Select(pr => new PatientPrescriptionsDto
                 {
                     IdPrescription = pr.IdPrescription,
                     Date = pr.Date,
@@ -57,7 +57,7 @@ public class DbService : IDbService
         return patientWithDetails;
     }
     
-    public async Task<bool> AddPrescription(PrescriptionWithDetailsDTO prescription)
+    public async Task<bool> AddPrescription(PrescriptionWithDetailsDto prescription)
     {
         var patient = await _context.Patients
             .SingleOrDefaultAsync(p => p.IdPatient == prescription.Patient.IdPatient);

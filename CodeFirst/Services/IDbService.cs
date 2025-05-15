@@ -4,6 +4,6 @@ namespace CodeFirst.Services;
 
 public interface IDbService
 {
-    Task<PatientWithDetailsDTO> GetPatient(int patientId);
-    Task<bool> AddPrescription(PrescriptionWithDetailsDTO prescription);
+    Task<PatientWithPrescriptionDto> GetPatient(int patientId);
+    Task<bool> AddPrescription(PrescriptionWithDetailsDto prescription);
 }
