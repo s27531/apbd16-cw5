@@ -6,24 +6,15 @@ namespace CodeFirst.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PrescriptionsController : ControllerBase
+public class PrescriptionsController(IDbService dbService) : ControllerBase
 {
-    private readonly IDbService _dbService;
-
-    public PrescriptionsController(IDbService dbService)
-    {
-        _dbService = dbService;
-    }
-    
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] PrescriptionWithDetailsDto prescription)
     {
-        var isAdded = await _dbService.AddPrescription(prescription);
-        if (isAdded)
+        if (await dbService.AddPrescription(prescription))
         {
             return Created();
         }
-
         return BadRequest();
     }
 }
