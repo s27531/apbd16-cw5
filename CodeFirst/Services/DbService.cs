@@ -12,8 +12,8 @@ public class DbService : IDbService
     public DbService(DatabaseContext context)
     {
         _context = context;
-    }
-
+    }  
+    
     public async Task<PatientWithDetailsDTO> GetPatient(int patientId)
     {
         var patientWithDetails = await _context.Patients
@@ -36,11 +36,12 @@ public class DbService : IDbService
                         LastName = pr.Doctor.LastName,
                         Email = pr.Doctor.Email
                     },
-                    Medicaments = pr.PrescriptionMedicaments.Select(pm => new MedicamentDTO
+                    Medicaments = pr.PrescriptionMedicaments.Select(pm => new MedicamentWithDetailsDto
                     {
                         IdMedicament = pm.Medicament.IdMedicament,
                         Name = pm.Medicament.Name,
                         Description = pm.Medicament.Description,
+                        Type = pm.Medicament.Type,
                         Details = pm.Details,
                         Dose = pm.Dose
                     }).ToList()
