@@ -11,9 +11,10 @@ public class PrescriptionsController(IDbService dbService) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] PrescriptionWithDetailsDto prescription)
     {
-        if (await dbService.AddPrescription(prescription))
+        var prescriptionId = await dbService.AddPrescription(prescription);
+        if (prescriptionId != null)
         {
-            return Created();
+            return Ok(prescriptionId);
         }
         return BadRequest();
     }

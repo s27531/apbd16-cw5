@@ -50,76 +50,53 @@ public class DbService(DatabaseContext context) : IDbService
         return patientWithDetails;
     }
     
-    public async Task<bool> AddPrescription(PrescriptionWithDetailsDto prescription)
-    {
-        var patient = await context.Patients
-            .SingleOrDefaultAsync(p => p.IdPatient == prescription.Patient.IdPatient);
-
-        // Add patient if not exist.
-        if (patient == null)
-        {
-            patient = new Patient()
-            {
-                IdPatient = prescription.Patient.IdPatient,
-                FirstName = prescription.Patient.FirstName,
-                LastName = prescription.Patient.LastName,
-                Birthdate = prescription.Patient.Birthdate
-            };
-            context.Patients.Add(patient);
-        }
-
-        // Validate medicaments existence
-        var medicamentIds = prescription.Medicaments.Select(m => m.IdMedicament).ToList();
-        var existingIds = await context.Medicaments
-            .Where(m => medicamentIds.Contains(m.IdMedicament))
-            .Select(m => m.IdMedicament)
-            .ToListAsync();
-        if (existingIds.Count != medicamentIds.Count)
-        {
-            return false;
-        }
-        
+    public async Task<int?> AddPrescription(PrescriptionWithDetailsDto prescription)
+    { // Returns id of newly created prescription, or null.
         // Validate medicament count
         if (prescription.Medicaments.Count > 10)
         {
-            return false;
-        }
-        
-        // Validate doctor's existence
-        if (!await context.Doctors.AnyAsync(d => d.IdDoctor == prescription.Doctor.IdDoctor))
-        {
-            return false;
+            return null;
         }
         
         // Validate dates
         if (prescription.Date > prescription.DueDate)
         {
-            return false;
+            return null;
         }
-
-        // Create new prescription
-        var createdPrescription = new Prescription
+        
+        // Validate medicament existence
+        var medicamentIds = prescription.Medicaments.Select(m => m.IdMedicament).ToList();
+        var existingMedicamentIds = await context.Medicaments
+            .Where(m => medicamentIds.Contains(m.IdMedicament))
+            .Select(m => m.IdMedicament)
+            .ToListAsync();
+        if (existingMedicamentIds.Count != medicamentIds.Count)
+        {
+            return null;
+        }
+        
+        // Create prescription
+        var newPrescription = new Prescription
         {
             Date = prescription.Date,
             DueDate = prescription.DueDate,
             IdPatient = prescription.Patient.IdPatient,
             IdDoctor = prescription.Doctor.IdDoctor
         };
-        context.Prescriptions.Add(createdPrescription);
-        await context.SaveChangesAsync(); // Attaching id for prescription
-
+        context.Prescriptions.Add(newPrescription);
+        await context.SaveChangesAsync(); // Crucial for getting the id of newly create prescription
+        
         // Add medicaments for prescription
         var prescriptionMedicaments = prescription.Medicaments.Select(m => new PrescriptionMedicament
         {
-            IdPrescription = createdPrescription.IdPrescription,
+            IdPrescription = newPrescription.IdPrescription,
             IdMedicament = m.IdMedicament,
             Dose = m.Dose,
             Details = m.Details
         }).ToList();
-        
         context.PrescriptionMedicaments.AddRange(prescriptionMedicaments);
         await context.SaveChangesAsync();
-
-        return true;
+        
+        return newPrescription.IdPrescription;
     }
 }

@@ -5,5 +5,5 @@ namespace CodeFirst.Services;
 public interface IDbService
 {
     Task<PatientWithPrescriptionDto> GetPatient(int patientId);
-    Task<bool> AddPrescription(PrescriptionWithDetailsDto prescription);
+    Task<int?> AddPrescription(PrescriptionWithDetailsDto prescription);
 }
