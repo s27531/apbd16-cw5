@@ -14,5 +14,5 @@ public class MedicamentWithDetailsDto
     public required string Description { get; init; }
     public required string Type { get; init; }
     public int? Dose { get; init; }
-    public required string Details { init; get; }
+    public required string Details { get; init; }
 }
